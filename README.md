@@ -42,9 +42,6 @@ file for your user as well. (This file essentially grants the application permis
 use X Server.) This was already set for me running a Gnome desktop so check if it is set
 already first.
 
-You should ensure `$XDG_RUNTIME_DIR` is set to a directory where temporary user-specific
-files can be created.
-
 Finally, you will need to set `$XKB_ROOT` to point to XKB on your file system. Mine
 was located at `/usr/share/X11/xkb` so I set it to exactly that path.
 
@@ -63,12 +60,13 @@ and Docker-Compose is integrated with the IDE. I also work with these plugins:
 * NASM plugin for some syntax highlighting.
 * Markdown plugin for this file!
 
-You will need to install the NASM assembler:
+For PyCharm to correctly identify PyQt5 types, you will need to install PyQt5-Stubs.
+For reasons I could not deduce on my computer, these stubs did not install
+correctly into my remote libraries, so the type hints were not pulled through.
 
-```bash
-sudo apt update
-sudo apt install nasm
-```
+You can "fix" this by installing PyQt5-stubs in a normal project, and then literally copying
+the remote library site package into External Libraries, Remote Libraries, .../site-packages/
+<PyQt5-stub related packages>. The type hints should show up now.
 
 You will also need GCC version 7+ (older versions may work. You will need the -Og
 optimisation flag for the build script).

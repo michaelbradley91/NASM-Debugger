@@ -3,7 +3,7 @@ FROM python:3.6
 WORKDIR /app
 
 # Install additional dependencies
-RUN apt-get update && apt-get install -y build-essential nasm libgl1-mesa-glx
+RUN apt-get update && apt-get install -y build-essential nasm libgl1-mesa-glx libxkbcommon-x11-0
 
 ARG XDG_RUNTIME_DIR
 RUN mkdir $XDG_RUNTIME_DIR
