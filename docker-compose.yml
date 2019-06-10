@@ -4,9 +4,16 @@ services:
         build:
           context: .
           dockerfile: Dockerfile
+          args:
+            XDG_RUNTIME_DIR: /tmp/runtime-root
         volumes:
             - .:/app
             - "$XAUTHORITY:/root/.Xauthority:rw"
+            - "$XKB_ROOT:/tmp/xkb"
         network_mode: "host"
+        privileged: true
         environment:
           - DISPLAY
+          - XDG_RUNTIME_DIR=/tmp/runtime-root
+          - XKB_ROOT
+          - QT_XKB_CONFIG_ROOT=/tmp/xkb

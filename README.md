@@ -42,6 +42,12 @@ file for your user as well. (This file essentially grants the application permis
 use X Server.) This was already set for me running a Gnome desktop so check if it is set
 already first.
 
+You should ensure `$XDG_RUNTIME_DIR` is set to a directory where temporary user-specific
+files can be created.
+
+Finally, you will need to set `$XKB_ROOT` to point to XKB on your file system. Mine
+was located at `/usr/share/X11/xkb` so I set it to exactly that path.
+
 You can run the application with:
 ```bash
 docker-compose up
