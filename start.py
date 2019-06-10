@@ -1,6 +1,10 @@
+import platform
+
 import pygame
 import time
 import random
+
+info = platform.dist()
 
 pygame.display.init()
 pygame.font.init()

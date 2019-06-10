@@ -4,11 +4,10 @@ I plan to only target an extremely specific architecture at first.
 
 ## Requirements
 I am using a Docker container during development, so you will need Docker installed.
-[Following the instructions here:](https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository)
+[Follow the instructions here:](https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository)
 
 ```bash
 sudo apt-get remove docker docker-engine docker.io
-
 sudo apt-get update
 sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -35,6 +34,20 @@ with the following:
 docker --version
 docker-compose --version
 ```
+
+You must be running X Server in your desktop environment.
+
+You should have `$XAUTHORITY` point to the XAuthority
+file for your user as well. (This file essentially grants the application permission to
+use X Server.) This was already set for me running a Gnome desktop so check if it is set
+already first.
+
+You can run the application with:
+```bash
+docker-compose up
+```
+
+Ta da! :-\)
 
 ## Recommendations
 I am working on the project in PyCharm Professional, so Docker
