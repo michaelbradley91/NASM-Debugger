@@ -1,0 +1,12 @@
+version: '3'
+services:
+    nasm-debugger:
+        build:
+          context: .
+          dockerfile: Dockerfile
+        volumes:
+            - .:/app
+            - "$XAUTHORITY:/root/.Xauthority:rw"
+        network_mode: "host"
+        environment:
+          - DISPLAY
