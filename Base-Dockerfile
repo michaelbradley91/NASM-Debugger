@@ -1,0 +1,23 @@
+FROM ubuntu:18.04
+
+ENV PATH=/usr/local/bin:$PATH
+ENV LANG=C.UTF-8
+
+# Install additional dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential python3.6 python3.6-dev python3-pip python3.6-venv \
+    nasm xauth libgl1-mesa-glx libxkbcommon-x11-0 libfontconfig1 libxrender1 \
+    ruby ruby-dev rubygems build-essential && \
+    gem install --no-ri --no-rdoc fpm
+
+WORKDIR /app
+
+# Create a virtual environment in the container
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Install any new requirements in this image...
+COPY requirements.txt /app/requirements.txt
+RUN pip install wheel
+RUN pip install -r requirements.txt

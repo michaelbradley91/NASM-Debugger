@@ -47,8 +47,13 @@ was located at `/usr/share/X11/xkb` so I set it to exactly that path.
 
 You can run the application with:
 ```bash
+./build-base-docker-image.sh
 docker-compose up
 ```
+
+The base Docker image is just to get around an annoying issue rebuilding in PyCharm,
+but it should work as above. Once built the first time, hopefully you will not need to build
+it again since requirements.txt is still reinstalled when it changes.
 
 Ta da! :-\)
 
