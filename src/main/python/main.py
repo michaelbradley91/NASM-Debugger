@@ -2,6 +2,7 @@
 Entry point for running the application!
 """
 import sys
+import resource_manager
 
 from PyQt5.QtWidgets import QApplication
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
@@ -15,6 +16,7 @@ def set_styles(app: QApplication):
 
 def run():
     application_context = ApplicationContext()
+    resource_manager.application_context = application_context
 
     set_styles(application_context.app)
 
