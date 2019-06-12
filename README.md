@@ -57,6 +57,15 @@ it again since requirements.txt is still reinstalled when it changes.
 
 Ta da! :-\)
 
+## Releases
+This project uses [FBS for releases](https://github.com/mherrmann/fbs).
+To build a release, just run this inside the docker VM:
+```bash
+fbs freeze
+fbs installer
+```
+This can be run in the Docker container or within a venv on the correct OS for the release.
+
 ## Recommendations
 I am working on the project in PyCharm Professional, so Docker
 and Docker-Compose is integrated with the IDE. I also work with these plugins:
