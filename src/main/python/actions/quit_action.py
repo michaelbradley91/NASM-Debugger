@@ -3,7 +3,7 @@ from typing import Callable
 from PyQt5.QtCore import QObject
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction
-from resource_manager import get_resource
+from service_locator import get_resource
 
 
 class QuitAction(QAction):

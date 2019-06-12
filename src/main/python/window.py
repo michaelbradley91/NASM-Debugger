@@ -2,6 +2,7 @@
 The top level window
 """
 from PyQt5.QtWidgets import QMainWindow, QTextEdit, QApplication
+from injector import inject
 
 from actions.quit_action import QuitAction
 
@@ -9,6 +10,7 @@ from actions.quit_action import QuitAction
 class NASMDebuggerWindow(QMainWindow):
     """ The top level window for the NASM debugger. """
 
+    @inject
     def __init__(self, app: QApplication):
         super().__init__()
         self.app = app
