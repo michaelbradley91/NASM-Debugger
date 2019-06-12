@@ -3,10 +3,7 @@ fbs==0.8.3
 future==0.17.1
 macholib==1.11
 pefile==2019.4.18
-Pygments==2.4.2
 PyInstaller==3.4
-pyqode.core==2.12.0
-pyqode.qt==2.10.0
 PyQt5==5.12.1
 PyQt5-sip==4.19.17
 PyQt5-stubs==5.12.1.0

@@ -7,7 +7,7 @@ RUN mkdir $XDG_RUNTIME_DIR
 
 # Install any new requirements in this image...
 COPY requirements.txt /app/requirements.txt
-RUN pip install -r requirements.txt
+RUN pip uninstall -r requirements.txt -y && pip install -r requirements.txt
 
 # Now copy in our code, and run it
 COPY . /app
