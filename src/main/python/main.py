@@ -1,31 +1,29 @@
+"""
+Entry point for running the application!
+"""
 import sys
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPalette
-from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QMessageBox, QMainWindow, QTextEdit
+from PyQt5.QtWidgets import QApplication
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-def on_top_clicked():
-    alert = QMessageBox()
-    alert.setText("You clicked the button!")
-    alert.exec()
+from window import NASMDebuggerWindow
+
+
+def set_styles(app: QApplication):
+    app.setStyle("Fusion")
+
+
+def run():
+    application_context = ApplicationContext()
+
+    set_styles(application_context.app)
+
+    window = NASMDebuggerWindow(application_context.app)
+    window.showMaximized()
+
+    exit_code = application_context.app.exec()
+    sys.exit(exit_code)
 
 
 if __name__ == '__main__':
-    application_context = ApplicationContext()
-    app = application_context.app
-
-    main_window = QMainWindow()
-    app.setStyle("Fusion")
-
-    palette = QPalette()
-    palette.setColor(QPalette.ButtonText, Qt.black)
-    app.setPalette(palette)
-    app.setStyleSheet("QPushButton { margin: 1ex; padding: 1ex }")
-
-    editor = QTextEdit()
-    main_window.setCentralWidget(editor)
-    main_window.showMaximized()
-
-    exit_code = app.exec()
-    sys.exit(exit_code)
+    run()
