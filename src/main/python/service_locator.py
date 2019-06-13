@@ -6,6 +6,7 @@ from injector import Injector
 
 # Will be populated when the application runs
 from configuration import Configuration
+from signals import Signals
 
 _injector: Optional[Injector] = None
 
@@ -31,6 +32,11 @@ def get_resource(resource: str) -> Union[bytes, str]:
 def config() -> Configuration:
     """ Get the application's configuration. """
     return get_service(Configuration)
+
+
+def signals() -> Signals:
+    """ Get the signals collection """
+    return get_service(Signals)
 
 
 def logger() -> Logger:
