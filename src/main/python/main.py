@@ -12,7 +12,7 @@ from window import NASMDebuggerWindow
 
 
 def set_styles(app: QApplication):
-    app.setStyle("Fusion")
+    pass
 
 
 def run():
