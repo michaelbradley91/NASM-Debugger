@@ -14,26 +14,32 @@ class ProjectWindow(ThinFrame):
     """
     def __init__(self):
         super().__init__()
-
-        path = "/"
         self.file_system_model = QFileSystemModel()
-        self.file_system_model.setRootPath(path)
+       
         self.file_system_model.setFilter(QDir.NoDotAndDotDot | QDir.AllEntries)
-        tree_view = QTreeView()
-        tree_view.setHeaderHidden(True)
-        tree_view.setModel(self.file_system_model)
-        tree_view.doubleClicked.connect(self.file_or_directory_double_clicked)
+        self.tree_view = QTreeView()
+        self.tree_view.setHeaderHidden(True)
+        self.tree_view.setModel(self.file_system_model)
+        self.tree_view.doubleClicked.connect(self.file_or_directory_double_clicked)
 
         # Hide all but the name column of the tree view.
         for i in range(1, self.file_system_model.columnCount()):
-            tree_view.hideColumn(i)
+            self.tree_view.hideColumn(i)
 
-        # This shows the selected path's contents rather than the path itself.
-        tree_view.setRootIndex(self.file_system_model.index(path))
+        self.set_path(os.path.expanduser("~"))
 
         layout = ThinVBoxLayout()
-        layout.addWidget(tree_view)
+        layout.addWidget(self.tree_view)
         self.setLayout(layout)
+
+        signals().folder_opened_signal.connect(self.folder_opened)
+        
+    def set_path(self, path: str):
+        """ Change the path of the project window. """
+        self.file_system_model.setRootPath(path)
+        # This shows the selected path's contents rather than the path itself.
+        self.tree_view.setRootIndex(self.file_system_model.index(path))
+        self.tree_view.clearSelection()
 
     @pyqtSlot(QModelIndex)
     def file_or_directory_double_clicked(self, index: QModelIndex):
@@ -41,3 +47,7 @@ class ProjectWindow(ThinFrame):
         path = self.file_system_model.filePath(index)
         if os.path.isfile(path):
             signals().file_selected_signal.emit(path)
+
+    @pyqtSlot(str)
+    def folder_opened(self, folder: str):
+        self.set_path(folder)
