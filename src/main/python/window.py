@@ -24,6 +24,7 @@ class NASMDebuggerWindow(QMainWindow):
         self.editor = QTextEdit(self)
         self.setCentralWidget(self.editor)
         self.setWindowTitle("NASM Debugger")
+        self.setContentsMargins(0, 0, 0, 0)
 
         self.statusBar().showMessage("Welcome to NASM Debugger!")
 

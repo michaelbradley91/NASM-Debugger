@@ -1,7 +1,9 @@
-from PyQt5.QtWidgets import QVBoxLayout, QFrame
+from PyQt5.QtWidgets import QFrame
+
+from widgets.helpers import ThinFrame, ThinVBoxLayout
 
 
-class ToolsWindow(QFrame):
+class ToolsWindow(ThinFrame):
     """
     The tools window shows various tools that can help with running and debugging
     the program.
@@ -12,10 +14,6 @@ class ToolsWindow(QFrame):
         frame = QFrame()
         frame.setFrameShape(QFrame.StyledPanel)
 
-        layout = QVBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout = ThinVBoxLayout()
         layout.addWidget(frame)
-
-        self.setContentsMargins(0, 0, 0, 0)
-        self.setFrameStyle(QFrame.StyledPanel)
         self.setLayout(layout)

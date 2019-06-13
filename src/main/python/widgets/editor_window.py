@@ -1,7 +1,9 @@
-from PyQt5.QtWidgets import QVBoxLayout, QTextEdit, QFrame
+from PyQt5.QtWidgets import QTextEdit
+
+from widgets.helpers import ThinFrame, ThinVBoxLayout
 
 
-class EditorWindow(QFrame):
+class EditorWindow(ThinFrame):
     """
     The editor window displays the currently opened file's contents if possible.
     Note that only a limited set of file types are supported.
@@ -9,10 +11,7 @@ class EditorWindow(QFrame):
     def __init__(self):
         super().__init__()
 
-        layout = QVBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout = ThinVBoxLayout()
         layout.addWidget(QTextEdit())
 
-        self.setContentsMargins(0, 0, 0, 0)
-        self.setFrameStyle(QFrame.StyledPanel)
         self.setLayout(layout)

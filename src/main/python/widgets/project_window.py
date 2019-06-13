@@ -1,8 +1,10 @@
 from PyQt5.QtCore import QDir
-from PyQt5.QtWidgets import QVBoxLayout, QFileSystemModel, QTreeView, QFrame
+from PyQt5.QtWidgets import QFileSystemModel, QTreeView, QFrame
+
+from widgets.helpers import ThinVBoxLayout, ThinFrame
 
 
-class ProjectWindow(QFrame):
+class ProjectWindow(ThinFrame):
     """
     The project window shows the files available in the file system which the user opened.
     The user can select files to show them in the editor window.
@@ -25,9 +27,6 @@ class ProjectWindow(QFrame):
         # This shows the selected path's contents rather than the path itself.
         tree_view.setRootIndex(file_system.index(path))
 
-        layout = QVBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout = ThinVBoxLayout()
         layout.addWidget(tree_view)
-        self.setContentsMargins(0, 0, 0, 0)
-        self.setFrameStyle(QFrame.StyledPanel)
         self.setLayout(layout)
