@@ -19,7 +19,11 @@ def run():
     application_context = ApplicationContext()
     set_styles(application_context.app)
 
-    service_locator.injector = Injector([InjectionModule(application_context)])
+    service_locator.set_injector(Injector([InjectionModule(application_context)]))
+    logger = service_locator.logger()
+    logger.info("Welcome to NASM Debugger! The application is starting up...")
+    logger.info(f"Log files are written to {service_locator.config().logs_directory}")
+    logger.info(f"Settings are taken from {service_locator.config().settings_directory}")
 
     window = service_locator.get_service(NASMDebuggerWindow)
     window.showMaximized()

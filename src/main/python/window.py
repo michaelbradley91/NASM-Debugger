@@ -3,6 +3,7 @@ The top level window
 """
 from PyQt5.QtWidgets import QMainWindow, QTextEdit, QApplication
 from injector import inject
+from service_locator import logger, config
 
 from actions.quit_action import QuitAction
 
