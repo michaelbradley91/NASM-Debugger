@@ -45,7 +45,7 @@ class ProjectWindow(ThinFrame):
     def file_or_directory_double_clicked(self, index: QModelIndex):
         """ Send a signal so we can react to the user's double click on a file in the project view. """
         path = self.file_system_model.filePath(index)
-        if os.path.isfile(path):
+        if path and os.path.isfile(path):
             signals().file_selected_signal.emit(path)
 
     @pyqtSlot(str)

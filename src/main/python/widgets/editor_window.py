@@ -31,8 +31,7 @@ class EditorWindow(ThinFrame):
     @pyqtSlot(str)
     def file_double_clicked(self, path: str):
         # Show the contents of the file - skipping over binary if present
-        with codecs.open(path, 'r', encoding='utf-8',
-                         errors='ignore') as file:
+        with codecs.open(path, 'r', encoding='utf-8', errors='ignore') as file:
             text = file.read()
 
         self.editor.setText(str.join("", (c for c in text if c in string.printable)))
