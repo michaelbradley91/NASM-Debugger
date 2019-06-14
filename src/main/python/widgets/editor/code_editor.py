@@ -21,7 +21,7 @@ class CodeEditor(QPlainTextEdit):
 
     def gutter_paint_event(self, event: QPaintEvent):
         painter = QPainter(self.gutter)
-        painter.fillRect(event.rect(), Qt.lightGray)
+        painter.fillRect(event.rect(), QColor(Qt.lightGray).lighter(125))
 
         block = self.firstVisibleBlock()
         block_number = block.blockNumber()
@@ -64,7 +64,7 @@ class CodeEditor(QPlainTextEdit):
 
         if not self.isReadOnly():
             selection = QTextEdit.ExtraSelection()
-            selection.format.setBackground(QColor(Qt.yellow).lighter(160))
+            selection.format.setBackground(QColor(Qt.blue).lighter(190))
             selection.format.setProperty(QTextFormat.FullWidthSelection, True)
 
             # State that the highlighting should be where the cursor is

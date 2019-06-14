@@ -26,7 +26,9 @@ class ProjectWindow(ThinFrame):
         for i in range(1, self.file_system_model.columnCount()):
             self.tree_view.hideColumn(i)
 
-        self.set_path(os.path.expanduser("~"))
+        # TODO set this back to the user's home directory, but remember where we left off!
+        # self.set_path(os.path.expanduser("~"))
+        self.set_path(os.path.join("/", "app", "assembly"))
 
         layout = ThinVBoxLayout()
         layout.addWidget(self.tree_view)
