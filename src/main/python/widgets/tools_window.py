@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QFrame
 
-from widgets.helpers import ThinFrame, ThinVBoxLayout
+from widgets.common import ThinFrame, ThinVBoxLayout
 
 
 class ToolsWindow(ThinFrame):

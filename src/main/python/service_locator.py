@@ -19,7 +19,7 @@ def set_injector(injector: Injector):
 
 
 def get_service(interface: Type[T]) -> T:
-    """ Resolve a service statically. This should only be used for the most commonly needed services / functions. """
+    """ Resolve a service statically. This should only be used for the most commonly needed helpers / functions. """
     return _injector.get(interface)
 
 

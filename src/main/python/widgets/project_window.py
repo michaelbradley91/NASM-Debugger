@@ -4,7 +4,7 @@ from PyQt5.QtCore import QDir, pyqtSlot, QModelIndex
 from PyQt5.QtWidgets import QFileSystemModel, QTreeView
 
 from service_locator import signals
-from widgets.helpers import ThinVBoxLayout, ThinFrame
+from widgets.common import ThinVBoxLayout, ThinFrame
 
 
 class ProjectWindow(ThinFrame):
