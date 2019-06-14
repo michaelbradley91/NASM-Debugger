@@ -1,7 +1,7 @@
 import os
 
 from PyQt5.QtCore import QDir, pyqtSlot, QModelIndex
-from PyQt5.QtWidgets import QFileSystemModel, QTreeView
+from PyQt5.QtWidgets import QFileSystemModel, QTreeView, QWidget
 
 from service_locator import signals
 from widgets.common import ThinVBoxLayout, ThinFrame
@@ -12,12 +12,12 @@ class ProjectWindow(ThinFrame):
     The project window shows the files available in the file system which the user opened.
     The user can select files to show them in the editor window.
     """
-    def __init__(self):
-        super().__init__()
-        self.file_system_model = QFileSystemModel()
+    def __init__(self, parent: QWidget):
+        super().__init__(parent)
+        self.file_system_model = QFileSystemModel(self)
        
         self.file_system_model.setFilter(QDir.NoDotAndDotDot | QDir.AllEntries)
-        self.tree_view = QTreeView()
+        self.tree_view = QTreeView(self)
         self.tree_view.setHeaderHidden(True)
         self.tree_view.setModel(self.file_system_model)
         self.tree_view.doubleClicked.connect(self.file_or_directory_double_clicked)

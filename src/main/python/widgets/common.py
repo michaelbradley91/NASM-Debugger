@@ -1,9 +1,9 @@
-from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QWidget
 
 
 class ThinFrame(QFrame):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent: QWidget):
+        super().__init__(parent)
         self.setFrameStyle(QFrame.NoFrame)
         self.setMidLineWidth(0)
         self.setLineWidth(0)

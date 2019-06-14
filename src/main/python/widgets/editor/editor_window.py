@@ -1,14 +1,12 @@
-import codecs
 import os
-import string
 from typing import Optional, Dict
 
 from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtWidgets import QTextEdit, QWidget, QTabWidget
+from PyQt5.QtWidgets import QWidget, QTabWidget
 
-from helpers.file_helpers import read_file_text
 from service_locator import signals
 from widgets.common import ThinFrame, ThinVBoxLayout
+from widgets.editor.editor_tab import EditorTab
 
 
 class EditorWindow(ThinFrame):
@@ -16,10 +14,10 @@ class EditorWindow(ThinFrame):
     The editor window displays the currently opened file's contents if possible.
     Note that only a limited set of file types are supported.
     """
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent: QWidget):
+        super().__init__(parent)
 
-        self.tabs = QTabWidget()
+        self.tabs = QTabWidget(self)
         self.tabs.setTabsClosable(True)
         self.tabs.setMovable(True)
         # noinspection PyUnresolvedReferences
@@ -55,7 +53,7 @@ class EditorWindow(ThinFrame):
         Always select the tab for this file.
         """
         if path not in self.open_files:
-            tab = EditorTab(path)
+            tab = EditorTab(path, self)
             self.tabs.addTab(tab, os.path.basename(path))
             self.open_files[path] = tab
 
@@ -80,15 +78,3 @@ class EditorWindow(ThinFrame):
         self.tabs.removeTab(index)
 
 
-class EditorTab(QWidget):
-    """ A single file tab in the editor window. """
-    def __init__(self, path: str):
-        super().__init__()
-
-        self.editor = QTextEdit()
-        self.editor.setText(read_file_text(path))
-
-        layout = ThinVBoxLayout()
-        layout.addWidget(self.editor)
-
-        self.setLayout(layout)

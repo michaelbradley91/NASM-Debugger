@@ -1,5 +1,6 @@
 altgraph==0.16.1
 appdirs==1.4.3
+dataclasses==0.6
 fbs==0.8.3
 future==0.17.1
 injector==0.16.2
