@@ -150,6 +150,7 @@ class NASMHighlighter(QSyntaxHighlighter):
         comment_format = QTextCharFormat()
         comment_format.setForeground(Qt.darkGreen)
 
+        # Note that the order these are applied in matters!
         self.highlighting_rules.append(HighlightingRule(pattern=KEYWORD_REGEX, format=keyword_format))
         self.highlighting_rules.append(HighlightingRule(pattern=MEMORY_REGEX, format=memory_format))
         self.highlighting_rules.append(HighlightingRule(pattern=REGISTER_REGEX, format=register_format))

@@ -3,7 +3,7 @@ import os
 from PyQt5.QtCore import QDir, pyqtSlot, QModelIndex
 from PyQt5.QtWidgets import QFileSystemModel, QTreeView, QWidget
 
-from service_locator import signals
+from service_locator import signals, user_settings
 from widgets.common import ThinVBoxLayout, ThinFrame
 
 
@@ -26,9 +26,7 @@ class ProjectWindow(ThinFrame):
         for i in range(1, self.file_system_model.columnCount()):
             self.tree_view.hideColumn(i)
 
-        # TODO set this back to the user's home directory, but remember where we left off!
-        # self.set_path(os.path.expanduser("~"))
-        self.set_path(os.path.join("/", "app", "assembly"))
+        self.set_path(user_settings().last_folder_opened)
 
         layout = ThinVBoxLayout()
         layout.addWidget(self.tree_view)
@@ -53,3 +51,4 @@ class ProjectWindow(ThinFrame):
     @pyqtSlot(str)
     def folder_opened(self, folder: str):
         self.set_path(folder)
+        user_settings().last_folder_opened = folder

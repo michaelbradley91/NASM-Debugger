@@ -10,6 +10,7 @@ from injector import inject
 from actions.open_action import OpenAction
 from actions.quit_action import QuitAction
 from service_locator import signals
+from settings.settings import Settings
 from widgets.editor.editor_window import EditorWindow
 from widgets.project_window import ProjectWindow
 from widgets.tools_window import ToolsWindow
@@ -18,18 +19,19 @@ from widgets.tools_window import ToolsWindow
 class NASMDebuggerWindow(QMainWindow):
     """ The top level window for the NASM debugger. """
     @inject
-    def __init__(self, app: QApplication):
+    def __init__(self, app: QApplication, settings: Settings):
         super().__init__()
         self.app = app
+        self.settings = settings
         self.project = ProjectWindow(self)
         self.editor = EditorWindow(self)
         self.tools = ToolsWindow(self)
         self.setCentralWidget(self.editor)
         self.resize(800, 500)
-        self.setWindowTitle("NASM Debugger")
+        self.setWindowTitle(app.applicationDisplayName())
         self.setContentsMargins(0, 0, 0, 0)
 
-        self.statusBar().showMessage("Welcome to NASM Debugger!")
+        self.statusBar().showMessage(f"Welcome to {app.applicationDisplayName()}!")
 
         # Create the menu
         self.menu = self.menuBar()
@@ -52,7 +54,7 @@ class NASMDebuggerWindow(QMainWindow):
 
     def open_folder(self):
         """ Open a folder with the user's project files. """
-        dialog = QFileDialog(self, 'Select your project folder', os.path.expanduser('~'),
+        dialog = QFileDialog(self, 'Select your project folder', self.settings.user.last_folder_opened,
                              "Assembly (*.asm);;All files (*)")
         dialog.setFileMode(QFileDialog.DirectoryOnly)
 

@@ -3,6 +3,7 @@ Entry point for running the application!
 """
 import sys
 
+from PyQt5.QtWidgets import QApplication
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from injector import Injector
 
@@ -15,10 +16,14 @@ def run():
     application_context = ApplicationContext()
 
     service_locator.set_injector(Injector([InjectionModule(application_context)]))
+    app: QApplication = application_context.app
+    app.setApplicationDisplayName("NASM Debugger")
+    app.setOrganizationName("com.michael.bradley.nasm-debugger")
+
     logger = service_locator.logger()
     logger.info("Welcome to NASM Debugger! The application is starting up...")
     logger.info(f"Log files are written to {service_locator.config().logs_directory}")
-    logger.info(f"Settings are taken from {service_locator.config().settings_directory}")
+    logger.info(f"Settings are taken from {service_locator.config().user_settings_directory}")
 
     window = service_locator.get_service(NASMDebuggerWindow)
     window.showMaximized()

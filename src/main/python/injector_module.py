@@ -6,11 +6,9 @@ from injector import Module, singleton, Binder
 
 from configuration import Configuration
 from logger import create_logger
+from settings.settings import Settings
+from settings.user_settings import UserSettings
 from signals import Signals
-from widgets.editor.editor_window import EditorWindow
-from widgets.project_window import ProjectWindow
-from widgets.tools_window import ToolsWindow
-from window import NASMDebuggerWindow
 
 
 class InjectionModule(Module):
@@ -26,3 +24,5 @@ class InjectionModule(Module):
         binder.bind(Configuration, scope=singleton)
         binder.bind(Logger, to=create_logger, scope=singleton)
         binder.bind(Signals, scope=singleton)
+        binder.bind(Settings, scope=singleton)
+        binder.bind(UserSettings, scope=singleton)

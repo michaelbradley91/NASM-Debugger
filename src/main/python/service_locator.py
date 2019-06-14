@@ -6,6 +6,8 @@ from injector import Injector
 
 # Will be populated when the application runs
 from configuration import Configuration
+from settings.settings import Settings
+from settings.user_settings import UserSettings
 from signals import Signals
 
 _injector: Optional[Injector] = None
@@ -37,6 +39,16 @@ def config() -> Configuration:
 def signals() -> Signals:
     """ Get the signals collection """
     return get_service(Signals)
+
+
+def settings() -> Settings:
+    """ Get the settings object """
+    return get_service(Settings)
+
+
+def user_settings() -> UserSettings:
+    """ Get the user settings object """
+    return settings().user
 
 
 def logger() -> Logger:

@@ -1,25 +1,28 @@
 import os
 
 import appdirs
+from PyQt5.QtWidgets import QApplication
+from injector import inject
 
 
 class Configuration:
     """ Root class of application specific configuration """
-
-    def __init__(self):
+    @inject
+    def __init__(self, app: QApplication):
+        self.app = app
         # Initialise directories
         try:
             os.makedirs(self.logs_directory)
         except FileExistsError:
             pass
         try:
-            os.makedirs(self.settings_directory)
+            os.makedirs(self.user_settings_directory)
         except FileExistsError:
             pass
 
     @property
     def app_name(self) -> str:
-        return "NASM Debugger"
+        return self.app.applicationDisplayName()
 
     @property
     def path_safe_app_name(self) -> str:
@@ -27,7 +30,7 @@ class Configuration:
 
     @property
     def app_author(self) -> str:
-        return "Michael Bradley"
+        return self.app.organizationName()
 
     @property
     def path_safe_app_author(self) -> str:
@@ -42,5 +45,5 @@ class Configuration:
         return appdirs.user_log_dir(self.path_safe_app_name, self.path_safe_app_author, self.app_version)
 
     @property
-    def settings_directory(self) -> str:
+    def user_settings_directory(self) -> str:
         return appdirs.user_config_dir(self.path_safe_app_name, self.path_safe_app_author)
