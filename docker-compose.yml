@@ -7,9 +7,10 @@ services:
           args:
             XDG_RUNTIME_DIR: /tmp/runtime-root
         volumes:
-            - .:/app
+            - ./src:/app
             - "$XAUTHORITY:/root/.Xauthority:rw"
             - "$XKB_ROOT:/tmp/xkb"
+            - ./root:/root
         network_mode: "host"
         privileged: true
         environment:

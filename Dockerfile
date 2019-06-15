@@ -10,10 +10,11 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
 # Now copy in our code, and run it
-COPY . /app
+COPY ./src /app
+COPY ./root /root
 
 # Build the assembly to be debugged
-RUN ./build-assembly.sh
+RUN /root/build-assembly.sh
 
 # Run the application
-CMD python src/main/python/main.py
+CMD python main/python/main.py

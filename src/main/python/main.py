@@ -18,7 +18,6 @@ def run():
     service_locator.set_injector(Injector([InjectionModule(application_context)]))
     app: QApplication = application_context.app
     app.setApplicationDisplayName("NASM Debugger")
-    app.setOrganizationName("com.michael.bradley.nasm-debugger")
 
     logger = service_locator.logger()
     logger.info("Welcome to NASM Debugger! The application is starting up...")

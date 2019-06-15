@@ -1,4 +1,5 @@
 import os
+from logging import Logger
 
 from PyQt5.QtCore import QObject, pyqtSignal, QSettings
 from PyQt5.QtWidgets import QApplication
@@ -12,12 +13,14 @@ class UserSettings(QObject):
     last_folder_opened_signal = pyqtSignal(str)
 
     @inject
-    def __init__(self, app: QApplication, configuration: Configuration):
+    def __init__(self, app: QApplication, configuration: Configuration, logger: Logger):
         super().__init__()
+        QSettings.setDefaultFormat(QSettings.IniFormat)
+        QSettings.setPath(QSettings.IniFormat, QSettings.UserScope,
+                          configuration.user_settings_directory)
         self.__user_settings_store = QSettings(QSettings.IniFormat, QSettings.UserScope,
-                                               app.organizationName(), app.applicationName(), self)
-        self.__user_settings_store.setPath(QSettings.IniFormat, QSettings.UserScope,
-                                           os.path.join(configuration.user_settings_directory, "settings.ini"))
+                                               "settings", "", self)
+        logger.info(f"Settings stored in {self.__user_settings_store.fileName()}")
 
     @property
     def last_folder_opened(self) -> str:
