@@ -25,7 +25,7 @@ def run():
     logger.info(f"User settings are written to {service_locator.settings().user.file_path()}")
 
     window = service_locator.get_service(NASMDebuggerWindow)
-    window.showMaximized()
+    window.show()
 
     exit_code = application_context.app.exec()
     sys.exit(exit_code)

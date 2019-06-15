@@ -3,14 +3,15 @@ The top level window
 """
 import os
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QTextEdit, QApplication, QSplitter, QFileDialog, QDialog, QErrorMessage
+from PyQt5.QtCore import Qt, pyqtSlot
+from PyQt5.QtGui import QCloseEvent
+from PyQt5.QtWidgets import QMainWindow, QApplication, QSplitter, QFileDialog, QDialog, QErrorMessage
 from injector import inject
 
 from actions.open_action import OpenAction
 from actions.quit_action import QuitAction
 from service_locator import signals
-from settings.settings import Settings
+from settings.user_settings import UserSettings
 from widgets.editor.editor_window import EditorWindow
 from widgets.project_window import ProjectWindow
 from widgets.tools_window import ToolsWindow
@@ -19,10 +20,10 @@ from widgets.tools_window import ToolsWindow
 class NASMDebuggerWindow(QMainWindow):
     """ The top level window for the NASM debugger. """
     @inject
-    def __init__(self, app: QApplication, settings: Settings):
+    def __init__(self, app: QApplication, user_settings: UserSettings):
         super().__init__()
         self.app = app
-        self.settings = settings
+        self.user_settings = user_settings
         self.project = ProjectWindow(self)
         self.editor = EditorWindow(self)
         self.tools = ToolsWindow(self)
@@ -37,24 +38,26 @@ class NASMDebuggerWindow(QMainWindow):
         self.menu = self.menuBar()
         self.file_menu = self.menu.addMenu('&File')
         self.file_menu.addAction(OpenAction(self.open_folder, self))
-        self.file_menu.addAction(QuitAction(self.app.exit, self))
+        self.file_menu.addAction(QuitAction(self.exit_app, self))
 
         # Split the window
-        horizontal_splitter = QSplitter(Qt.Horizontal)
-        horizontal_splitter.addWidget(self.project)
-        horizontal_splitter.addWidget(self.editor)
-        horizontal_splitter.setSizes([100000, 500000])
+        self.horizontal_splitter = QSplitter(Qt.Horizontal)
+        self.horizontal_splitter.addWidget(self.project)
+        self.horizontal_splitter.addWidget(self.editor)
+        self.horizontal_splitter.setSizes([100000, 500000])
 
-        vertical_splitter = QSplitter(Qt.Vertical)
-        vertical_splitter.addWidget(horizontal_splitter)
-        vertical_splitter.addWidget(self.tools)
-        vertical_splitter.setSizes([250000, 100000])
+        self.vertical_splitter = QSplitter(Qt.Vertical)
+        self.vertical_splitter.addWidget(self.horizontal_splitter)
+        self.vertical_splitter.addWidget(self.tools)
+        self.vertical_splitter.setSizes([250000, 100000])
 
-        self.setCentralWidget(vertical_splitter)
+        self.setCentralWidget(self.vertical_splitter)
+
+        self.user_settings.restore_widget(self, "window")
 
     def open_folder(self):
         """ Open a folder with the user's project files. """
-        dialog = QFileDialog(self, 'Select your project folder', self.settings.user.last_folder_opened,
+        dialog = QFileDialog(self, 'Select your project folder', self.user_settings.last_folder_opened,
                              "Assembly (*.asm);;All files (*)")
         dialog.setFileMode(QFileDialog.DirectoryOnly)
 
@@ -70,3 +73,12 @@ class NASMDebuggerWindow(QMainWindow):
                 return
 
             signals().folder_opened_signal.emit(chosen_directory)
+
+    def closeEvent(self, event: QCloseEvent):
+        self.user_settings.save_widget(self, "window")
+        self.user_settings.sync()
+        super().closeEvent(event)
+
+    def exit_app(self):
+        self.close()
+        self.app.exit()
