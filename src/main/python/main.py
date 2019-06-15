@@ -22,7 +22,7 @@ def run():
     logger = service_locator.logger()
     logger.info("Welcome to NASM Debugger! The application is starting up...")
     logger.info(f"Log files are written to {service_locator.config().logs_directory}")
-    logger.info(f"Settings are taken from {service_locator.config().user_settings_directory}")
+    logger.info(f"User settings are written to {service_locator.settings().user.file_path()}")
 
     window = service_locator.get_service(NASMDebuggerWindow)
     window.showMaximized()
