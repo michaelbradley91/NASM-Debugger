@@ -13,12 +13,16 @@ _NOT_FOUND_VALUE = uuid.uuid4()
 def save_widget(store: QSettings, widget: QWidget, group: str):
     """ Store all layout aspects of a widget. Checks to see if save_state is available too. """
     store.beginGroup(group)
+    # noinspection PyBroadException
     try:
         if has_method(widget, "saveState") and has_method(widget, "restoreState"):
             store.setValue("state", widget.saveState())
 
         store.setValue("geometry", widget.saveGeometry())
         store.setValue("is_maximised", widget.isMaximized())
+    except Exception:
+        # Do not prevent continuing to load the program if settings appear invalid
+        pass
     finally:
         store.endGroup()
 
@@ -26,8 +30,9 @@ def save_widget(store: QSettings, widget: QWidget, group: str):
 def restore_widget(store: QSettings, widget: QWidget, group: str):
     """ Restore a widget based on its previous state. """
     store.beginGroup(group)
+    # noinspection PyBroadException
     try:
-        if has_method(widget, "restoreState") and has_method(widget, "restoreState"):
+        if has_method(widget, "saveState") and has_method(widget, "restoreState"):
             state = store.value("state", _NOT_FOUND_VALUE)
             if state != _NOT_FOUND_VALUE:
                 widget.restoreState(state)
@@ -41,6 +46,8 @@ def restore_widget(store: QSettings, widget: QWidget, group: str):
             widget.showMaximized()
         else:
             widget.showNormal()
-
+    except Exception:
+        # Do not prevent continuing to load the program if settings appear invalid
+        pass
     finally:
         store.endGroup()

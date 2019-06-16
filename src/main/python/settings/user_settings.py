@@ -1,4 +1,5 @@
 import os
+from enum import Enum
 
 from PyQt5.QtCore import QObject, QSettings
 from PyQt5.QtWidgets import QWidget
@@ -6,6 +7,26 @@ from injector import inject
 
 from configuration import Configuration
 from helpers.settings_helpers import save_widget, restore_widget
+
+
+class Key(Enum):
+    """
+    All the settings key used. It is important they are all unique
+    Note that these do not correspond exactly to keys due to save shortcuts for widgets.
+    """
+    window = "window"
+    window_vertical_splitter = "window.vertical_splitter"
+    window_horizontal_splitter = "window.horizontal_splitter"
+    last_folder_opened = "last_folder_opened"
+    project = "project"
+    project_tree = "project.tree"
+
+
+class Default:
+    """
+    Stores all the defaults for base user settings.
+    """
+    last_folder_opened = os.path.expanduser("~")
 
 
 class UserSettings(QObject):
@@ -29,13 +50,21 @@ class UserSettings(QObject):
     def last_folder_opened(self, value: str):
         self.__store.setValue("last_folder_opened", value)
 
-    def save_widget(self, widget: QWidget, group: str):
-        """ Save a widget's state to the user's settings. """
-        save_widget(self.__store, widget, group)
+    def save(self, key: Key, value: any):
+        """ Save a value in the user's settings """
+        self.__store.setValue(key.value, value)
 
-    def restore_widget(self, widget: QWidget, group: str):
+    def get(self, key: Key, default: any = None):
+        """ Get a value from the user's settings. Returns the given default if not found, or None otherwise """
+        return self.__store.value(key.value, default)
+
+    def save_widget(self, widget: QWidget, group: Key):
+        """ Save a widget's state to the user's settings. """
+        save_widget(self.__store, widget, group.value)
+
+    def restore_widget(self, widget: QWidget, group: Key):
         """ Restore a widget's state from a user's settings. """
-        restore_widget(self.__store, widget, group)
+        restore_widget(self.__store, widget, group.value)
 
     def file_path(self) -> str:
         """ Get the file path for the user settings. """

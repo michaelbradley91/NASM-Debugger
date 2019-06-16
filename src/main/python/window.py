@@ -3,7 +3,7 @@ The top level window
 """
 import os
 
-from PyQt5.QtCore import Qt, pyqtSlot
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QMainWindow, QApplication, QSplitter, QFileDialog, QDialog, QErrorMessage
 from injector import inject
@@ -11,7 +11,7 @@ from injector import inject
 from actions.open_action import OpenAction
 from actions.quit_action import QuitAction
 from service_locator import signals
-from settings.user_settings import UserSettings
+from settings.user_settings import UserSettings, Key, Default
 from widgets.editor.editor_window import EditorWindow
 from widgets.project_window import ProjectWindow
 from widgets.tools_window import ToolsWindow
@@ -28,9 +28,9 @@ class NASMDebuggerWindow(QMainWindow):
         self.editor = EditorWindow(self)
         self.tools = ToolsWindow(self)
         self.setCentralWidget(self.editor)
+        self.setContentsMargins(0, 0, 0, 0)
         self.resize(800, 500)
         self.setWindowTitle(app.applicationDisplayName())
-        self.setContentsMargins(0, 0, 0, 0)
 
         self.statusBar().showMessage(f"Welcome to {app.applicationDisplayName()}!")
 
@@ -53,11 +53,14 @@ class NASMDebuggerWindow(QMainWindow):
 
         self.setCentralWidget(self.vertical_splitter)
 
-        self.user_settings.restore_widget(self, "window")
+        self.user_settings.restore_widget(self, Key.window)
+        self.user_settings.restore_widget(self.horizontal_splitter, Key.window_horizontal_splitter)
+        self.user_settings.restore_widget(self.vertical_splitter, Key.window_vertical_splitter)
 
     def open_folder(self):
         """ Open a folder with the user's project files. """
-        dialog = QFileDialog(self, 'Select your project folder', self.user_settings.last_folder_opened,
+        dialog = QFileDialog(self, 'Select your project folder',
+                             self.user_settings.get(Key.last_folder_opened, Default.last_folder_opened),
                              "Assembly (*.asm);;All files (*)")
         dialog.setFileMode(QFileDialog.DirectoryOnly)
 
@@ -75,8 +78,10 @@ class NASMDebuggerWindow(QMainWindow):
             signals().folder_opened_signal.emit(chosen_directory)
 
     def closeEvent(self, event: QCloseEvent):
-        self.user_settings.save_widget(self, "window")
-        self.user_settings.sync()
+        self.user_settings.save_widget(self, Key.window)
+        self.user_settings.save_widget(self.horizontal_splitter, Key.window_horizontal_splitter)
+        self.user_settings.save_widget(self.vertical_splitter, Key.window_vertical_splitter)
+        self.project.close()
         super().closeEvent(event)
 
     def exit_app(self):
