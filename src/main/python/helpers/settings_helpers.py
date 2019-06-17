@@ -7,7 +7,7 @@ from helpers.inspection_helpers import has_method
 
 
 # Value used to determine if a setting does not exist. Its uniqueness should ensure we do not ignore any settings.
-_NOT_FOUND_VALUE = uuid.uuid4()
+NOT_FOUND_VALUE = uuid.uuid4()
 
 
 def save_widget(store: QSettings, widget: QWidget, group: str):
@@ -33,16 +33,16 @@ def restore_widget(store: QSettings, widget: QWidget, group: str):
     # noinspection PyBroadException
     try:
         if has_method(widget, "saveState") and has_method(widget, "restoreState"):
-            state = store.value("state", _NOT_FOUND_VALUE)
-            if state != _NOT_FOUND_VALUE:
+            state = store.value("state", NOT_FOUND_VALUE)
+            if state != NOT_FOUND_VALUE:
                 widget.restoreState(state)
 
-        geometry = store.value("geometry", _NOT_FOUND_VALUE)
-        if geometry != _NOT_FOUND_VALUE:
+        geometry = store.value("geometry", NOT_FOUND_VALUE)
+        if geometry != NOT_FOUND_VALUE:
             widget.restoreGeometry(geometry)
 
-        is_maximised: str = store.value("is_maximised", _NOT_FOUND_VALUE)
-        if is_maximised != _NOT_FOUND_VALUE and is_maximised.lower() == "true":
+        is_maximised: str = store.value("is_maximised", NOT_FOUND_VALUE)
+        if is_maximised != NOT_FOUND_VALUE and is_maximised.lower() == "true":
             widget.showMaximized()
         else:
             widget.showNormal()

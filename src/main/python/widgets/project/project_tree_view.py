@@ -72,8 +72,9 @@ class ProjectTreeView(QTreeView):
         is_expanded_list = pickle.loads(is_expanded)
         self.setUpdatesEnabled(False)
         for path in is_expanded_list:
-            index = self.file_system_model.index(path)
-            self.setExpanded(index, True)
+            if os.path.isdir(path):
+                index = self.file_system_model.index(path)
+                self.setExpanded(index, True)
         self.setUpdatesEnabled(True)
 
     def closeEvent(self, event: QCloseEvent):

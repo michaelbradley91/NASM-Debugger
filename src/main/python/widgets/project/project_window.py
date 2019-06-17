@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QWidget
 from service_locator import user_settings
 from settings.user_settings import Key
 from widgets.common import ThinVBoxLayout, ThinFrame
-from widgets.project_tree_view import ProjectTreeView
+from widgets.project.project_tree_view import ProjectTreeView
 
 
 class ProjectWindow(ThinFrame):

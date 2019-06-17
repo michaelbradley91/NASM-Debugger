@@ -2,9 +2,11 @@ import os
 from typing import Optional, Dict
 
 from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QWidget, QTabWidget
 
-from service_locator import signals
+from service_locator import signals, user_settings
+from settings.user_settings import Key
 from widgets.common import ThinFrame, ThinVBoxLayout
 from widgets.editor.editor_tab import EditorTab
 
@@ -34,6 +36,12 @@ class EditorWindow(ThinFrame):
         # Mapping from file paths to tabs.
         self.open_files: Dict[str, EditorTab] = dict()
 
+        # Restore from settings
+        user_settings().restore_widget(self, Key.editor)
+        for open_file_path in user_settings().get_from_json(Key.editor_open_files, []):
+            self.add_file(open_file_path)
+        self.select_file(user_settings().get(Key.editor_current_file))
+
     @pyqtSlot(int)
     def tab_closing(self, index: int):
         # Remove the tab from the mapping
@@ -41,6 +49,7 @@ class EditorWindow(ThinFrame):
         self.close_tab(tab)
 
     def get_path_by_tab(self, tab: QWidget) -> Optional[str]:
+        """ Get a path by the tab. """
         for path, saved_tab in self.open_files.items():
             if saved_tab == tab:
                 return path
@@ -52,14 +61,22 @@ class EditorWindow(ThinFrame):
         Add a new tab with the contents of the file if it has not been shown.
         Always select the tab for this file.
         """
-        if path not in self.open_files:
+        self.add_file(path)
+        self.select_file(path)
+
+    def select_file(self, path: str):
+        """ Select a file by the file path. """
+        if path in self.open_files:
+            tab = self.open_files[path]
+            index = self.tabs.indexOf(tab)
+            self.tabs.setCurrentIndex(index)
+
+    def add_file(self, path: str):
+        """ Add a new file to the tabs. """
+        if path not in self.open_files and os.path.isfile(path):
             tab = EditorTab(path, self)
             self.tabs.addTab(tab, os.path.basename(path))
             self.open_files[path] = tab
-
-        tab = self.open_files[path]
-        index = self.tabs.indexOf(tab)
-        self.tabs.setCurrentIndex(index)
 
     @pyqtSlot()
     def folder_opened(self):
@@ -77,4 +94,14 @@ class EditorWindow(ThinFrame):
         tab.deleteLater()
         self.tabs.removeTab(index)
 
+    def closeEvent(self, event: QCloseEvent):
+        user_settings().save_widget(self, Key.editor)
+        user_settings().save_as_json(Key.editor_open_files, list(self.open_files.keys()))
 
+        tab: EditorTab = self.tabs.widget(self.tabs.currentIndex())
+        user_settings().save(Key.editor_current_file, tab.path)
+
+        for tab in self.open_files.values():
+            tab.close()
+
+        super().closeEvent(event)

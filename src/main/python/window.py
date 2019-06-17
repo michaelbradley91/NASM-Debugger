@@ -13,7 +13,7 @@ from actions.quit_action import QuitAction
 from service_locator import signals
 from settings.user_settings import UserSettings, Key, Default
 from widgets.editor.editor_window import EditorWindow
-from widgets.project_window import ProjectWindow
+from widgets.project.project_window import ProjectWindow
 from widgets.tools_window import ToolsWindow
 
 
@@ -78,10 +78,14 @@ class NASMDebuggerWindow(QMainWindow):
             signals().folder_opened_signal.emit(chosen_directory)
 
     def closeEvent(self, event: QCloseEvent):
+        # Clear all settings keys to ensure we don't leave old settings behind
+        self.user_settings.clear()
         self.user_settings.save_widget(self, Key.window)
         self.user_settings.save_widget(self.horizontal_splitter, Key.window_horizontal_splitter)
         self.user_settings.save_widget(self.vertical_splitter, Key.window_vertical_splitter)
         self.project.close()
+        self.editor.close()
+        self.tools.close()
         super().closeEvent(event)
 
     def exit_app(self):
