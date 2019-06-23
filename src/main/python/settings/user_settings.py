@@ -28,6 +28,7 @@ class Key(Enum):
     editor_current_file = "editor.current_file"
     editor_tab = "editor.tab"
     tools = "tools"
+    appearance = "appearance"
 
 
 class Default:

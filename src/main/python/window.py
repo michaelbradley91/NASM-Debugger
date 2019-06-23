@@ -1,17 +1,15 @@
 """
 The top level window
 """
-import os
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCloseEvent
-from PyQt5.QtWidgets import QMainWindow, QApplication, QSplitter, QFileDialog, QDialog, QErrorMessage
+from PyQt5.QtWidgets import QMainWindow, QApplication, QSplitter
 from injector import inject
 
-from actions.open_action import OpenAction
-from actions.quit_action import QuitAction
+from menu import Menu
 from service_locator import signals
-from settings.user_settings import UserSettings, Key, Default
+from settings.user_settings import UserSettings, Key
 from widgets.editor.editor_window import EditorWindow
 from widgets.project.project_window import ProjectWindow
 from widgets.tools_window import ToolsWindow
@@ -24,6 +22,10 @@ class NASMDebuggerWindow(QMainWindow):
         super().__init__()
         self.app = app
         self.user_settings = user_settings
+
+        # Connect to signals
+        signals().exit_action_signal.connect(self.exit_app)
+
         self.project = ProjectWindow(self)
         self.editor = EditorWindow(self)
         self.tools = ToolsWindow(self)
@@ -35,10 +37,7 @@ class NASMDebuggerWindow(QMainWindow):
         self.statusBar().showMessage(f"Welcome to {app.applicationDisplayName()}!")
 
         # Create the menu
-        self.menu = self.menuBar()
-        self.file_menu = self.menu.addMenu('&File')
-        self.file_menu.addAction(OpenAction(self.open_folder, self))
-        self.file_menu.addAction(QuitAction(self.exit_app, self))
+        self.menu = Menu(self)
 
         # Split the window
         self.horizontal_splitter = QSplitter(Qt.Horizontal)
@@ -56,26 +55,6 @@ class NASMDebuggerWindow(QMainWindow):
         self.user_settings.restore_widget(self, Key.window)
         self.user_settings.restore_widget(self.horizontal_splitter, Key.window_horizontal_splitter)
         self.user_settings.restore_widget(self.vertical_splitter, Key.window_vertical_splitter)
-
-    def open_folder(self):
-        """ Open a folder with the user's project files. """
-        dialog = QFileDialog(self, 'Select your project folder',
-                             self.user_settings.get(Key.last_folder_opened, Default.last_folder_opened),
-                             "Assembly (*.asm);;All files (*)")
-        dialog.setFileMode(QFileDialog.DirectoryOnly)
-
-        if dialog.exec() == QDialog.Accepted:
-            # Check a directory really was chosen as this is reliant on the system dialog
-            if not dialog.selectedFiles():
-                QErrorMessage().showMessage("Please select only a folder to open.")
-                return
-
-            chosen_directory = dialog.selectedFiles()[0]
-            if not os.path.isdir(chosen_directory):
-                QErrorMessage().showMessage("Please select only a folder to open.")
-                return
-
-            signals().folder_opened_signal.emit(chosen_directory)
 
     def closeEvent(self, event: QCloseEvent):
         # Clear all settings keys to ensure we don't leave old settings behind

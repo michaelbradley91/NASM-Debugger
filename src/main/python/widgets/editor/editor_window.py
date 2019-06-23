@@ -98,8 +98,10 @@ class EditorWindow(ThinFrame):
         user_settings().save_widget(self, Key.editor)
         user_settings().save_as_json(Key.editor_open_files, list(self.open_files.keys()))
 
-        tab: EditorTab = self.tabs.widget(self.tabs.currentIndex())
-        user_settings().save(Key.editor_current_file, tab.path)
+        current_index = self.tabs.currentIndex()
+        if current_index >= 0:
+            tab: EditorTab = self.tabs.widget(current_index)
+            user_settings().save(Key.editor_current_file, tab.path)
 
         for tab in self.open_files.values():
             tab.close()
