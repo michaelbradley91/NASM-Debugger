@@ -2,7 +2,7 @@ altgraph==0.16.1
 appdirs==1.4.3
 dataclasses==0.6
 fbs==0.8.3
-future==0.17.1
+future==0.18.3
 injector==0.16.2
 macholib==1.11
 pefile==2019.4.18
